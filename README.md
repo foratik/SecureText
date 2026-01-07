@@ -1,7 +1,7 @@
-# 🔐 SecureText — Client-Side Text Encryption (Static)
+# 🔐 SecureText: Client-Side Text Encryption (Static)
 
 **SecureText** is a lightweight, secure, **fully client-side** tool for encrypting and decrypting text directly in your browser.
-No backend, no data transmission, no tracking — everything happens locally.
+No backend, no data transmission, no tracking. everything happens locally.
 
 🌐 **Live deployments:**
 
