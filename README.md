@@ -1,33 +1,111 @@
-# SecureText (Static)
+# 🔐 SecureText — Client-Side Text Encryption (Static)
 
-SecureText is a small client-side tool to encrypt and decrypt text locally in your browser. This repository has been converted to a static site so it can be hosted on GitHub Pages or any static hosting provider.
+**SecureText** is a lightweight, secure, **fully client-side** tool for encrypting and decrypting text directly in your browser.
+No backend, no data transmission, no tracking — everything happens locally.
 
-## What changed
-- The app is fully client-side: HTML, CSS, and JavaScript only.
-- No server-side component is required.
-- `index.html` is at the repository root and references assets from the `static/` folder.
+🌐 **Live deployments:**
 
-## How to publish on GitHub Pages
-1. Create a new repository on GitHub and push this project.
-2. In the repository settings, under **Pages**, choose `Branch: main` and `Folder: / (root)` (or `gh-pages` branch if you prefer).
-3. Save — GitHub will publish your site at `https://<your-username>.github.io/<repo-name>/`.
+* **GitHub Pages:**
+  [https://enc.sforati.ir](https://enc.sforati.ir)
+* **Iran-based internal server (works on domestic networks):**
+  [https://encrypt.sforati.ir](https://encrypt.sforati.ir)
 
-Alternatively, you can host the `index.html` and `static/` folder with any static host (Netlify, Vercel, S3, etc.).
+> The internal deployment ensures accessibility even when international internet access is restricted.
 
-## Notes
-- All assets are local in `static/` (no external CDN).
-- To edit styles or scripts, modify `static/style.css` and `static/crypto.js`.
-- The encryption runs entirely in the browser using the Web Crypto API; passwords and text are not sent to any server.
+---
 
-## Local testing
-Open `index.html` in a modern browser (Chrome/Edge/Firefox). For full functionality (Web Crypto), use a secure context (GitHub Pages or `http://localhost` served by a simple static server). For quick local testing you can run a simple HTTP server from the repo root:
+## ✨ Features
 
-```powershell
-# Windows PowerShell (Python 3)
-python -m http.server 8000
-# Then open http://localhost:8000
+*  **Secure by design** — uses the browser’s native **Web Crypto API**
+*  **100% client-side** — no servers, no APIs, no data leakage
+*  **Static & portable** — hostable on GitHub Pages or any static host
+*  **Fast & lightweight**
+*  **Works on internal networks**
+*  **One-click copy to clipboard**
+*  **No external CDN dependencies**
+
+---
+
+## 🛡️ Security Model
+
+* All encryption and decryption happens **locally in your browser**
+* Plain text and passwords:
+
+  * ❌ are NOT sent to any server
+  * ❌ are NOT stored
+  * ❌ are NOT logged
+* Uses standards-based cryptography via `window.crypto.subtle`
+* Fully open source and auditable
+
+> ⚠️ Users are responsible for choosing strong passwords.
+
+---
+
+## Project Structure
+
+```text
+.
+├── index.html
+└── static/
+    ├── style.css
+    └── crypto.js
 ```
 
-## Accessibility & UX
-- Click the result box to copy its contents to the clipboard.
-- Buttons automatically lose focus after interaction to avoid sticky focus rings.
+* The project is **purely static**
+* ❗ No secrets, keys, tokens, or environment-specific values should ever be committed to the repository
+
+---
+
+## 🚀 Usage
+
+1. Open the website
+2. Enter the text you want to encrypt or decrypt
+3. Choose a password
+4. Click **Encrypt** or **Decrypt**
+5. Click the output box to copy the result
+
+---
+
+## 🖥️ Local Development
+
+For local testing, SecureText must run in a **secure context**.
+
+### Recommended:
+
+```bash
+# Python 3
+python -m http.server 8000
+```
+
+Then open:
+
+```
+http://localhost:8000
+```
+
+> Opening `index.html` directly via `file://` may disable the Web Crypto API.
+
+---
+
+## 🌍 Deploying on GitHub Pages
+
+1. Fork or clone this repository
+2. Go to **Settings → Pages**
+3. Configure:
+
+   * Branch: `main`
+   * Folder: `/ (root)`
+4. Save
+
+Your site will be available at:
+
+```
+https://<username>.github.io/<repository-name>/
+```
+
+---
+
+## Development Guidelines
+
+* Keep cryptography browser-native (Web Crypto API only)
+* Pull requests and improvements are welcome
