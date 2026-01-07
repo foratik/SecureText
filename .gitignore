@@ -1,0 +1,13 @@
+# Ignore Python cache and server-related files — not needed for GitHub Pages
+__pycache__/
+*.pyc
+encrypt.py
+templates/
+
+# OS artifacts
+Thumbs.db
+.DS_Store
+
+# Node / build artifacts (none expected but safe)
+node_modules/
+dist/

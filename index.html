@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SecureText</title>
+    <link rel="stylesheet" href="static/style.css">
+    <meta name="description" content="Encrypt and decrypt messages locally in the browser">
+    <meta name="robots" content="noindex">
+</head>
+<body>
+    <canvas id="particles" aria-hidden="true"></canvas>
+
+    <main class="container" id="app">
+        <h1>SecureText</h1>
+        <p class="lead">Encrypt or decrypt messages locally. Nothing leaves your device.</p>
+
+        <div class="mode-switch" role="tablist" aria-label="Mode">
+            <button class="mode-btn active" data-mode="encrypt" role="tab" aria-selected="true">Encrypt</button>
+            <button class="mode-btn" data-mode="decrypt" role="tab" aria-selected="false">Decrypt</button>
+        </div>
+
+        <label class="sr-only" for="input">Input</label>
+        <textarea id="input" placeholder="Enter text here..." aria-label="Input text"></textarea>
+
+        <input type="password" id="password" placeholder="Password" aria-label="Password">
+
+        <div class="action-row">
+            <button id="action-btn" class="primary" onclick="performAction()">Encrypt</button>
+            <button id="clear-btn" class="ghost" onclick="clearAll()">Clear</button>
+        </div>
+
+        <label class="sr-only" for="output">Output</label>
+        <div class="output-wrap">
+            <textarea id="output" placeholder="Result" readonly aria-label="Result"></textarea>
+        </div>
+        <div class="output-controls below">
+            <span id="copy-msg" class="copy-msg" role="status" aria-live="polite">Copied!</span>
+        </div>
+
+        <p class="hint">Tip: Use a strong password. Keep it safe.</p>
+    </main>
+
+    <script src="static/crypto.js"></script>
+    <script>
+        // Mode toggle behavior
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-selected','false');
+                });
+                btn.classList.add('active');
+                btn.setAttribute('aria-selected','true');
+                document.getElementById('action-btn').textContent = btn.dataset.mode === 'encrypt' ? 'Encrypt' : 'Decrypt';
+            });
+        });
+
+        function clearAll(){
+            document.getElementById('input').value='';
+            document.getElementById('output').value='';
+            document.getElementById('password').value='';
+        }
+
+        function performAction(){
+            const mode = document.querySelector('.mode-btn.active').dataset.mode;
+            if(mode === 'encrypt') encryptText(); else decryptText();
+            const ab = document.getElementById('action-btn'); if(ab) ab.blur();
+        }
+
+        // Particle background (canvas) — lightweight particle system
+        (function particleBG(){
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            let width, height, particles = [], mouse = { x: -9999, y: -9999 };
+
+            function resize(){ width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+            window.addEventListener('resize', resize);
+            resize();
+
+            function rand(min, max){ return Math.random()*(max-min)+min; }
+
+            function create(n){
+                particles = [];
+                for(let i=0;i<n;i++){
+                    particles.push({ x: rand(0,width), y: rand(0,height), vx: rand(-0.6,0.6), vy: rand(-0.6,0.6), r: rand(2,4.5), alpha: rand(0.22,0.42) });
+                }
+            }
+
+            canvas.addEventListener('mousemove', (e)=>{ mouse.x = e.clientX; mouse.y = e.clientY; });
+            canvas.addEventListener('mouseleave', ()=>{ mouse.x = -9999; mouse.y = -9999; });
+
+            function step(){
+                ctx.clearRect(0,0,width,height);
+                for(let p of particles){
+                    const dx = mouse.x - p.x; const dy = mouse.y - p.y; const dist = Math.hypot(dx,dy) || 1;
+                    if(dist < 120){ p.vx += dx/dist*0.001; p.vy += dy/dist*0.001; }
+                    p.x += p.vx; p.y += p.vy;
+                    if(p.x < -10) p.x = width+10; if(p.x > width+10) p.x = -10;
+                    if(p.y < -10) p.y = height+10; if(p.y > height+10) p.y = -10;
+                    ctx.beginPath(); ctx.fillStyle = `rgba(56,189,248,${p.alpha})`; ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+                }
+                for(let i=0;i<particles.length;i++){
+                    for(let j=i+1;j<particles.length;j++){
+                        const a = particles[i], b = particles[j];
+                        const d = Math.hypot(a.x-b.x,a.y-b.y);
+                        if(d < 140){ ctx.strokeStyle = `rgba(56,189,248,${0.18*(1 - d/140)})`; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+                    }
+                }
+                requestAnimationFrame(step);
+            }
+
+            create(Math.max(40, Math.floor((window.innerWidth*window.innerHeight)/45000)));
+            requestAnimationFrame(step);
+        })();
+
+        // Remove persistent focus after interactions
+        document.querySelectorAll('button').forEach(b=>{
+            b.addEventListener('mouseup', ()=>b.blur());
+            b.addEventListener('touchend', ()=>b.blur());
+            b.addEventListener('click', ()=>setTimeout(()=>b.blur(),120));
+        });
+
+    </script>
+</body>
+</html>
