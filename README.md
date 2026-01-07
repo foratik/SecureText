@@ -12,6 +12,11 @@ No backend, no data transmission, no tracking. everything happens locally.
 
 > The internal deployment ensures accessibility even when international internet access is restricted.
 
+
+<p align="center">  
+    <img height="auto" width="720px" src ="preview.png">
+</p>
+
 ---
 
 ## ✨ Features
